@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ANDRAN Fit Mobile</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="workouts">Workouts</string>
+    <string name="perfil">Perfil</string>
+    <string name="entrenadores">Entrenadores</string>
+</resources>

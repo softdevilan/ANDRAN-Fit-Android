@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_workouts"
+        android:icon="@drawable/baseline_calendar_month_24"
+        android:title="@string/workouts" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/baseline_person_24"
+        android:title="@string/perfil" />
+
+    <item
+        android:id="@+id/navigation_trainers"
+        android:icon="@drawable/baseline_chat_24"
+        android:title="@string/entrenadores" />
+
+</menu>
