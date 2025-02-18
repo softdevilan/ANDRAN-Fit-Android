@@ -1,5 +1,6 @@
 package com.example.andranfitmobile.ui.trainers
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+
+private const val TAG = "TrainersViewModel"
 
 class TrainersViewModel : ViewModel() {
 
@@ -21,6 +24,7 @@ class TrainersViewModel : ViewModel() {
                 val listaEntrenadores = mutableListOf<Trainer>()
                 for (snapshot in dataSnapshot.children) {
                     val entrenador = Trainer.fromSnapshot(snapshot)
+                    Log.d(TAG, "Entrenador cargado: ${entrenador}")
                     listaEntrenadores.add(entrenador)
                 }
                 _entrenadores.value = listaEntrenadores

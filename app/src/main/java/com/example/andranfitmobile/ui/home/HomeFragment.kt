@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.andranfitmobile.MainActivity
 import com.example.andranfitmobile.databinding.FragmentHomeBinding
 import com.example.andranfitmobile.ui.workouts.WorkoutAdapter
 
@@ -26,9 +27,19 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d(TAG, "onCreate: Iniciando HomeFragment")
+
         arguments?.let {
             userId = it.getString("USER_ID")
-            Log.d(TAG, "onCreate: UserID obtenido = ${userId}")
+
+            // Verificar si el ID de usuario es null
+            if (userId == null) {
+                userId = "ktbbOu0vGkNwxlt3JevyuYpUElW2"
+                Log.d(TAG, "Null userId, inicializando a ktbbOu0vGkNwxlt3JevyuYpUElW2")
+            } else {
+                Log.d(TAG, "userId recibido: $userId")
+            }
         }
     }
 
@@ -41,8 +52,8 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Configurar RecyclerView para mostrar los próximos workouts
-        val recyclerView: RecyclerView = binding.workoutsRecyclerView
+        // Configurar RecyclerView para mostrar los workouts
+        val recyclerView: RecyclerView = binding.workoutRecyclerView
         workoutAdapter = WorkoutAdapter()
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = workoutAdapter
@@ -56,15 +67,23 @@ class HomeFragment : Fragment() {
                 "F" -> "Bienvenida"
                 else -> "Hola"
             }
+            Log.d(TAG, "Bindeando el texto de bienvenida con el nombre del usuario")
             binding.bienvenidaTextView.text = "$bienvenida, $nombre"
         }
 
-        homeViewModel.proximosWorkouts.observe(viewLifecycleOwner) { proximosWorkouts ->
-            workoutAdapter.submitList(proximosWorkouts)
+        homeViewModel.workouts.observe(viewLifecycleOwner) { workouts ->
+            workoutAdapter.submitList(workouts)
         }
 
         // Cargar el usuario y los próximos workouts
-        userId?.let { homeViewModel.cargarUsuario(it) }
+        Log.d(TAG, "Llamando a cargarUsuario()")
+        userId?.let {
+            Log.d(TAG, "Cargando usuario con ID: $it")
+            homeViewModel.cargarUsuario(it)
+
+            Log.d(TAG, "Cargando próximos workouts del usuario con ID: $it")
+            homeViewModel.cargarWorkouts(it)
+        }
 
         return root
     }
@@ -72,16 +91,7 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d(TAG, "onDestroyView: Limpiando binding")
     }
 
-    companion object {
-        fun newInstance(userId: String?): HomeFragment {
-            val fragment = HomeFragment()
-            val args = Bundle().apply {
-                putString("USER_ID", userId)
-            }
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

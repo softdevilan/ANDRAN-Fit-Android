@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.andranfitmobile.MainActivity
 import com.example.andranfitmobile.databinding.FragmentWorkoutsBinding
 
 private const val TAG = "WorkoutsFragment"
@@ -28,10 +27,17 @@ class WorkoutsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             userId = it.getString("USER_ID")
-            Log.d(TAG, "ID de usuario recibido1: ${userId}")
-        }
 
-        Log.d(TAG, "ID de usuario recibido2: ${userId}")
+            Log.d(TAG, "onCreate: Iniciando WorkoutsFragment")
+
+            // Verificar si el ID de usuario es null
+            if (userId == null) {
+                userId = "ktbbOu0vGkNwxlt3JevyuYpUElW2"
+                Log.d(TAG, "Null userId, inicializando a ktbbOu0vGkNwxlt3JevyuYpUElW2")
+            } else {
+                Log.d(TAG, "userId recibido: $userId")
+            }
+        }
     }
 
     override fun onCreateView(
@@ -39,7 +45,6 @@ class WorkoutsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "ID de usuario recibido3: ${userId}")
         workoutsViewModel = ViewModelProvider(this).get(WorkoutsViewModel::class.java)
         _binding = FragmentWorkoutsBinding.inflate(inflater, container, false)
         val root: View = binding.root

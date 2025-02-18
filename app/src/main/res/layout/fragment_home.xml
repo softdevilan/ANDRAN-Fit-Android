@@ -21,7 +21,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tus próximos workouts"
+        android:text="Tu siguiente workout"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/white"
@@ -29,6 +29,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/workoutsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/workoutRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

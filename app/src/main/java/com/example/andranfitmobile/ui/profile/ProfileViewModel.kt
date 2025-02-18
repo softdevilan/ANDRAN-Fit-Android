@@ -18,7 +18,7 @@ class ProfileViewModel : ViewModel() {
     val usuario: LiveData<User> get() = _usuario
 
     fun cargarUsuario(userId: String) {
-        val database = FirebaseDatabase.getInstance().getReference("usuarios").child(userId)
+        val database = FirebaseDatabase.getInstance().getReference("Usuarios/Clientes").child(userId)
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val usuario = User.fromSnapshot(dataSnapshot)

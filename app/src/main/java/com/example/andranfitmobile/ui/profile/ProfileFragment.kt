@@ -26,11 +26,20 @@ class ProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d(TAG, "onCreate: Iniciando ProfileFragment")
+
         arguments?.let {
             userId = it.getString("USER_ID")
-            Log.d(TAG, "ID de usuario recibido1: ${userId}")
+
+            // Verificar si el ID de usuario es null
+            if (userId == null) {
+                userId = "ktbbOu0vGkNwxlt3JevyuYpUElW2"
+                Log.d(TAG, "Null userId, inicializando a ktbbOu0vGkNwxlt3JevyuYpUElW2")
+            } else {
+                Log.d(TAG, "userId recibido: $userId")
+            }
         }
-        Log.d(TAG, "ID de usuario recibido2: ${userId}")
     }
 
     override fun onCreateView(
@@ -38,7 +47,6 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "ID de usuario recibido3: ${userId}")
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -55,7 +63,6 @@ class ProfileFragment : Fragment() {
             val medicionFechaFormateada = formatDate(usuario.Mediciones["Actual"]?.Fecha ?: 0)
 
             binding.nombreTextView.text = nombreCompleto
-            binding.apellidoTextView.text = usuario.Nombre.Apellido1
             binding.fechaNacimientoTextView.text = "Fecha de Nacimiento: $fechaNacimientoFormateada"
             binding.alturaTextView.text = "Altura: $altura cm"
             binding.pesoTextView.text = "Peso: $peso kg"

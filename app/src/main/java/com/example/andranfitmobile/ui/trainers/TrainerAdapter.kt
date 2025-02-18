@@ -31,13 +31,15 @@ class TrainerAdapter : RecyclerView.Adapter<TrainerAdapter.TrainerViewHolder>() 
 
     inner class TrainerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nombreTextView: TextView = itemView.findViewById(R.id.nombreTextView)
-        private val apellidoTextView: TextView = itemView.findViewById(R.id.apellidoTextView)
         private val emailTextView: TextView = itemView.findViewById(R.id.emailTextView)
 
         fun bind(entrenador: Trainer) {
-            nombreTextView.text = entrenador.Nombre.Nombre
-            apellidoTextView.text = entrenador.Nombre.Apellido1
-            emailTextView.text = entrenador.Login.email
+            val nombreCompleto = "${entrenador.Nombre.Nombre} ${entrenador.Nombre.Apellido1}"
+            nombreTextView.text = nombreCompleto
+
+            val email = "e-mail: " + (entrenador.Contacto["email"] ?: "No disponible")
+            val phone = "Teléfono: " + (entrenador.Contacto["phone"] ?: "No disponible")
+            emailTextView.text = email
         }
     }
 }

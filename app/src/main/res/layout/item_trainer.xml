@@ -16,15 +16,6 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/apellidoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
-        android:text="Apellido del entrenador"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-    <TextView
         android:id="@+id/emailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
