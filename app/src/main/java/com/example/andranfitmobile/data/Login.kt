@@ -1,6 +1,24 @@
 package com.example.andranfitmobile.data
 
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.Exclude
+import com.google.firebase.database.IgnoreExtraProperties
+import java.util.*
+
+@IgnoreExtraProperties
 data class Login(
-    val `e-mail`: String,
-    val pass: String
-)
+    val email: String = "",
+    val pass: String = ""
+) {
+    companion object {
+        @JvmStatic
+        fun fromSnapshot(snapshot: DataSnapshot): Login {
+            val email = snapshot.child("e-mail").getValue(String::class.java) ?: ""
+            val pass = snapshot.child("pass").getValue(String::class.java) ?: ""
+            return Login(
+                email = email,
+                pass = pass
+            )
+        }
+    }
+}
