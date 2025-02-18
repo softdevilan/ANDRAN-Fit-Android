@@ -9,6 +9,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.andranfitmobile.databinding.ActivityMainBinding
 import com.example.andranfitmobile.ui.home.HomeFragment
 import com.example.andranfitmobile.ui.workouts.WorkoutsFragment
+import com.example.andranfitmobile.ui.trainers.TrainersFragment
 
 class MainActivity : AppCompatActivity() {
 

@@ -30,11 +30,13 @@ class UserAdapter(
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nombreTextView: TextView = itemView.findViewById(R.id.nombreTextView)
-        private val apellidoTextView: TextView = itemView.findViewById(R.id.apellidoTextView)
 
         fun bind(usuario: User) {
-            nombreTextView.text = usuario.Nombre.Nombre
-            apellidoTextView.text = usuario.Nombre.Apellido1
+            nombreTextView.text = buildString {
+                append(usuario.Nombre.Nombre)
+                append(" ")
+                append(usuario.Nombre.Apellido1)
+            }
         }
     }
 }

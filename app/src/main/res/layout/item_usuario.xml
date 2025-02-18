@@ -2,22 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="?attr/selectableItemBackground">
+    android:orientation="horizontal"
+    android:padding="@dimen/default_padding"
+    android:background="@drawable/container_background"
+    >
 
     <TextView
         android:id="@+id/nombreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Nombre Apellido"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/apellidoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_marginTop="4dp" />
 
 </LinearLayout>

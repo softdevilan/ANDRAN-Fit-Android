@@ -79,27 +79,6 @@ data class Entrenador(
 
 @IgnoreExtraProperties
 data class Medicion(
-    val Grasa: Int = 0,
-    val Peso: Int = 0,
-    val Fecha: Long = 0
-) {
-    companion object {
-        @JvmStatic
-        fun fromSnapshot(snapshot: DataSnapshot): Medicion {
-            val grasa = snapshot.child("Grasa").getValue(Int::class.java) ?: 0
-            val peso = snapshot.child("Peso").getValue(Int::class.java) ?: 0
-            val fecha = snapshot.child("Fecha").getValue(Long::class.java) ?: 0
-            return Medicion(
-                Grasa = grasa,
-                Peso = peso,
-                Fecha = fecha
-            )
-        }
-    }
-}
-
-@IgnoreExtraProperties
-data class MedicionActual(
     val Altura: Int = 0,
     val Fecha: Long = 0,
     val Grasa: Int = 0,
@@ -107,12 +86,12 @@ data class MedicionActual(
 ) {
     companion object {
         @JvmStatic
-        fun fromSnapshot(snapshot: DataSnapshot): MedicionActual {
+        fun fromSnapshot(snapshot: DataSnapshot): Medicion {
             val altura = snapshot.child("Altura").getValue(Int::class.java) ?: 0
             val fecha = snapshot.child("Fecha").getValue(Long::class.java) ?: 0
             val grasa = snapshot.child("Grasa").getValue(Int::class.java) ?: 0
             val peso = snapshot.child("Peso").getValue(Int::class.java) ?: 0
-            return MedicionActual(
+            return Medicion(
                 Altura = altura,
                 Fecha = fecha,
                 Grasa = grasa,
