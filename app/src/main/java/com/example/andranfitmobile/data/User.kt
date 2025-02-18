@@ -7,8 +7,7 @@ import java.util.*
 
 @IgnoreExtraProperties
 data class User(
-    val Activo: Boolean = false,
-    val Login: Login = Login(),
+    val Activo: Boolean = true,
     val Entrenadores: Map<String, Entrenador> = emptyMap(),
     val FechaNacimiento: Long = 0,
     val Mediciones: Map<String, Medicion> = emptyMap(),
@@ -33,7 +32,6 @@ data class User(
         @JvmStatic
         fun fromSnapshot(snapshot: DataSnapshot): User {
             val activo = snapshot.child("Activo").getValue(Boolean::class.java) ?: false
-            val login = snapshot.child("Login").getValue(Login::class.java) ?: Login()
             val entrenadores = snapshot.child("Entrenadores").children.map { Pair(it.key!!, Entrenador.fromSnapshot(it)) }.toMap()
             val fechaNacimiento = snapshot.child("FechaNacimiento").getValue(Long::class.java) ?: 0
             val mediciones = snapshot.child("Mediciones").children.map { Pair(it.key!!, Medicion.fromSnapshot(it)) }.toMap()
@@ -46,7 +44,6 @@ data class User(
             val workouts = snapshot.child("Workouts").getValue(Workouts::class.java) ?: Workouts()
             return User(
                 Activo = activo,
-                Login = login,
                 Entrenadores = entrenadores,
                 FechaNacimiento = fechaNacimiento,
                 Mediciones = mediciones,
@@ -164,7 +161,7 @@ data class ObjetivosNutricionales(
     val Grasas: Int = 0,
     val Kcal: Int = 0,
     val Proteínas: Int = 0,
-    val Restricciones: RestriccionesNutricionales = RestriccionesNutricionales()
+    val Restricciones: Restriccion = Restriccion()
 ) {
     companion object {
         @JvmStatic
@@ -173,50 +170,47 @@ data class ObjetivosNutricionales(
             val grasas = snapshot.child("Grasas").getValue(Int::class.java) ?: 0
             val kcal = snapshot.child("Kcal").getValue(Int::class.java) ?: 0
             val proteínas = snapshot.child("Proteínas").getValue(Int::class.java) ?: 0
-            val restricciones = snapshot.child("Restricciones").getValue(RestriccionesNutricionales::class.java) ?: RestriccionesNutricionales()
+
+            // Obtener restricciones como un mapa manualmente
+            val restriccionesMap = mutableMapOf<String, String>()
+            val restriccionesSnapshot = snapshot.child("Restricciones")
+            for (child in restriccionesSnapshot.children) {
+                val key = child.key ?: continue
+                val value = child.getValue(String::class.java) ?: continue
+                restriccionesMap[key] = value
+            }
+
             return ObjetivosNutricionales(
                 Carbohidratos = carbohidratos,
                 Grasas = grasas,
                 Kcal = kcal,
                 Proteínas = proteínas,
-                Restricciones = restricciones
+                Restricciones = Restriccion(restriccionesMap)
             )
         }
     }
 }
 
 @IgnoreExtraProperties
-data class RestriccionesNutricionales(
-    val `Gluten-free`: String = "",
-    val `Low-carb`: String = ""
-) {
-    companion object {
-        @JvmStatic
-        fun fromSnapshot(snapshot: DataSnapshot): RestriccionesNutricionales {
-            val glutenFree = snapshot.child("Gluten-free").getValue(String::class.java) ?: ""
-            val lowCarb = snapshot.child("Low-carb").getValue(String::class.java) ?: ""
-            return RestriccionesNutricionales(
-                `Gluten-free` = glutenFree,
-                `Low-carb` = lowCarb
-            )
-        }
-    }
-}
+data class Restriccion(
+    val restriccion: Map<String, String> = emptyMap()
+)
 
 @IgnoreExtraProperties
 data class Workouts(
     val Completados: List<Workout> = emptyList(),
-    val Pendientes: Map<String, Workout> = emptyMap()
+    val Pendientes: List<Workout> = emptyList()
 ) {
     companion object {
-        @JvmStatic
         fun fromSnapshot(snapshot: DataSnapshot): Workouts {
-            val completados = snapshot.child("Completados").children.map { Workout.fromSnapshot(it) }.toList()
-            val pendientes = snapshot.child("Pendientes").children.map { Pair(it.key!!, Workout.fromSnapshot(it)) }.toMap()
-            return Workouts(
-                Completados = completados,
-                Pendientes = pendientes
-            )
+            val completados = snapshot.child("Completados").children.mapNotNull {
+                it.getValue(Workout::class.java)
+            }
+            val pendientes = snapshot.child("Pendientes").children.mapNotNull {
+                it.getValue(Workout::class.java)
+            }
+
+            return Workouts(Completados = completados, Pendientes = pendientes)
         }
     }
 }
