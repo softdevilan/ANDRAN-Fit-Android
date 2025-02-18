@@ -40,7 +40,7 @@ class WorkoutAdapter : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() 
             val fechaFormateada = formatDate(workout.Fecha)
             fechaTextView.text = fechaFormateada
 
-            val ejercicios = workout.Ejercicios.joinToString(", ") { ejercicio ->
+            val ejercicios = workout.Ejercicios.joinToString(", ") { ejercicio: Exercise ->
                 "${ejercicio.Nombre} (${ejercicio.Series}x${ejercicio.Reps})"
             }
             ejerciciosTextView.text = ejercicios

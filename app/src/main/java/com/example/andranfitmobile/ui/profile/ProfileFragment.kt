@@ -28,8 +28,9 @@ class ProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             userId = it.getString("USER_ID")
+            Log.d(TAG, "ID de usuario recibido1: ${userId}")
         }
-        Log.d(TAG, "onCreate: Iniciando ProfileFragment con UserID: $userId")
+        Log.d(TAG, "ID de usuario recibido2: ${userId}")
     }
 
     override fun onCreateView(
@@ -37,6 +38,7 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, "ID de usuario recibido3: ${userId}")
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -79,6 +81,8 @@ class ProfileFragment : Fragment() {
         userId?.let {
             profileViewModel.cargarUsuario(it)
             Log.d(TAG, "onCreateView: Cargando usuario con UserID: $it")
+        } ?: run {
+            Log.e(TAG, "UserID es null, no se puede cargar el usuario")
         }
 
         return root

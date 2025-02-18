@@ -16,14 +16,14 @@ class WorkoutsViewModel : ViewModel() {
     val workouts: LiveData<List<Workout>> get() = _workouts
 
     fun cargarWorkouts(userId: String) {
-        val database = FirebaseDatabase.getInstance().getReference("usuarios").child(userId)
+        val database = FirebaseDatabase.getInstance().getReference("Usuarios/Clientes").child(userId)
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val usuario = dataSnapshot.getValue(User::class.java)
                 usuario?.let {
                     val allWorkouts = mutableListOf<Workout>()
                     allWorkouts.addAll(it.Workouts.Completados)
-                    allWorkouts.addAll(it.Workouts.Pendientes.values)
+                    allWorkouts.addAll(it.Workouts.Pendientes)
                     allWorkouts.sortBy { it.Fecha }
                     _workouts.value = allWorkouts
                 }

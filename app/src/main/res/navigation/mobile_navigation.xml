@@ -9,23 +9,40 @@
         android:id="@+id/navigation_home"
         android:name="com.example.andranfitmobile.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_workouts"
-        android:name="com.example.andranfitmobile.ui.workouts.TrainersFragment"
+        android:name="com.example.andranfitmobile.ui.workouts.WorkoutsFragment"
         android:label="Workouts"
-        tools:layout="@layout/fragment_workouts" />
+        tools:layout="@layout/fragment_workouts">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.andranfitmobile.ui.profile.ProfileFragment"
         android:label="Perfil"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_trainers"
-        android:name="com.example.andranfitmobile.ui.profile.ProfileFragment"
+        android:name="com.example.andranfitmobile.ui.trainers.TrainersFragment"
         android:label="Entrenadores"
-        tools:layout="@layout/fragment_trainers" />
+        tools:layout="@layout/fragment_trainers">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

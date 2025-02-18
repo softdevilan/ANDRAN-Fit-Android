@@ -1,6 +1,7 @@
 package com.example.andranfitmobile.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.andranfitmobile.databinding.FragmentHomeBinding
 import com.example.andranfitmobile.ui.workouts.WorkoutAdapter
+
+private const val TAG = "HomeFragment"
 
 class HomeFragment : Fragment() {
 
@@ -25,6 +28,7 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             userId = it.getString("USER_ID")
+            Log.d(TAG, "onCreate: UserID obtenido = ${userId}")
         }
     }
 

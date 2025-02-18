@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/default_padding"
-    android:background="?attr/selectableItemBackground"
-    android:backgroundTint="@color/black">
+    android:background="@drawable/container_background">
 
     <TextView
         android:id="@+id/nombreTextView"

@@ -4,11 +4,13 @@ plugins {
 
     // For Firebase
     id("com.google.gms.google-services")
+
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
     namespace = "com.example.andranfitmobile"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.andranfitmobile"
@@ -42,15 +44,18 @@ android {
 }
 
 dependencies {
+    // --Firebase--
+
     // Import the Firebase BoM
-    implementation(platform(libs.firebase.bom))
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
 
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation(libs.firebase.analytics)
 
+    implementation("com.google.firebase:firebase-analytics")
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

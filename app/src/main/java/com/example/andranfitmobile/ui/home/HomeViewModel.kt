@@ -19,12 +19,12 @@ class HomeViewModel : ViewModel() {
     val proximosWorkouts: LiveData<List<Workout>> get() = _proximosWorkouts
 
     fun cargarUsuario(userId: String) {
-        val database = FirebaseDatabase.getInstance().getReference("usuarios").child(userId)
+        val database = FirebaseDatabase.getInstance().getReference("Usuarios/Clientes").child(userId)
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val usuario = dataSnapshot.getValue(User::class.java)
                 usuario?.let { _usuario.value = it }
-                cargarProximosWorkouts(usuario)
+
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -33,12 +33,5 @@ class HomeViewModel : ViewModel() {
         })
     }
 
-    private fun cargarProximosWorkouts(usuario: User?) {
-        usuario?.let {
-            val proximosWorkouts = it.Workouts.Pendientes.values.filter { workout ->
-                workout.Fecha >= System.currentTimeMillis() / 1000
-            }.sortedBy { it.Fecha }
-            _proximosWorkouts.value = proximosWorkouts.toList()
-        }
-    }
+
 }

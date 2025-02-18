@@ -51,6 +51,8 @@ class UserSelectionActivity : AppCompatActivity() {
                 usuariosList.clear()
 
                 for (snapshot in dataSnapshot.children) {
+                    Log.d("FirebaseData", snapshot.value.toString())
+
                     val usuario = User.fromSnapshot(snapshot)
                     Log.d(TAG, "onDataChange: Usuario cargado: ${usuario.Nombre.Nombre} ${usuario.Nombre.Apellido1}")
                     usuariosList.add(Pair(snapshot.key!!, usuario))

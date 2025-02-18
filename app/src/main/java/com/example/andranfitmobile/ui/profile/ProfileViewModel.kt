@@ -1,5 +1,6 @@
 package com.example.andranfitmobile.ui.profile
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+
+private const val TAG = "ProfileViewModel"
 
 class ProfileViewModel : ViewModel() {
 
@@ -23,7 +26,7 @@ class ProfileViewModel : ViewModel() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Manejo de errores
+                Log.d(TAG, "onCancelled: Error al cargar usuario desde Firebase", databaseError.toException())
             }
         })
     }

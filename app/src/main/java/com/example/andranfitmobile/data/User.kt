@@ -41,7 +41,7 @@ data class User(
             val registro = snapshot.child("Registro").getValue(Long::class.java) ?: 0
             val sexo = snapshot.child("Sexo").getValue(String::class.java) ?: ""
             val trato = snapshot.child("Trato").getValue(String::class.java) ?: ""
-            val workouts = snapshot.child("Workouts").getValue(Workouts::class.java) ?: Workouts()
+            val workouts = Workouts.fromSnapshot(snapshot.child("Workouts"))
             return User(
                 Activo = activo,
                 Entrenadores = entrenadores,
@@ -101,7 +101,7 @@ data class Medicion(
 @IgnoreExtraProperties
 data class Objetivos(
     val Deportivos: ObjetivosDeportivos = ObjetivosDeportivos(),
-    val Físicos: ObjetivosFísicos = ObjetivosFísicos(),
+    val Físicos: ObjetivosFísicos? = null, // Cambiar a nullable
     val Nutricionales: ObjetivosNutricionales = ObjetivosNutricionales(),
     val Plan: String = ""
 ) {
@@ -109,7 +109,7 @@ data class Objetivos(
         @JvmStatic
         fun fromSnapshot(snapshot: DataSnapshot): Objetivos {
             val deportivos = snapshot.child("Deportivos").getValue(ObjetivosDeportivos::class.java) ?: ObjetivosDeportivos()
-            val físicos = snapshot.child("Físicos").getValue(ObjetivosFísicos::class.java) ?: ObjetivosFísicos()
+            val físicos = snapshot.child("Físicos").getValue(ObjetivosFísicos::class.java)
             val nutricionales = snapshot.child("Nutricionales").getValue(ObjetivosNutricionales::class.java) ?: ObjetivosNutricionales()
             val plan = snapshot.child("Plan").getValue(String::class.java) ?: ""
             return Objetivos(
@@ -170,22 +170,13 @@ data class ObjetivosNutricionales(
             val grasas = snapshot.child("Grasas").getValue(Int::class.java) ?: 0
             val kcal = snapshot.child("Kcal").getValue(Int::class.java) ?: 0
             val proteínas = snapshot.child("Proteínas").getValue(Int::class.java) ?: 0
-
-            // Obtener restricciones como un mapa manualmente
-            val restriccionesMap = mutableMapOf<String, String>()
-            val restriccionesSnapshot = snapshot.child("Restricciones")
-            for (child in restriccionesSnapshot.children) {
-                val key = child.key ?: continue
-                val value = child.getValue(String::class.java) ?: continue
-                restriccionesMap[key] = value
-            }
-
+            val restricciones = snapshot.child("Restricciones").getValue(Restriccion::class.java) ?: Restriccion()
             return ObjetivosNutricionales(
                 Carbohidratos = carbohidratos,
                 Grasas = grasas,
                 Kcal = kcal,
                 Proteínas = proteínas,
-                Restricciones = Restriccion(restriccionesMap)
+                Restricciones = restricciones
             )
         }
     }
@@ -194,70 +185,36 @@ data class ObjetivosNutricionales(
 @IgnoreExtraProperties
 data class Restriccion(
     val restriccion: Map<String, String> = emptyMap()
-)
-
-@IgnoreExtraProperties
-data class Workouts(
-    val Completados: List<Workout> = emptyList(),
-    val Pendientes: List<Workout> = emptyList()
-) {
-    companion object {
-        fun fromSnapshot(snapshot: DataSnapshot): Workouts {
-            val completados = snapshot.child("Completados").children.mapNotNull {
-                it.getValue(Workout::class.java)
-            }
-            val pendientes = snapshot.child("Pendientes").children.mapNotNull {
-                it.getValue(Workout::class.java)
-            }
-
-            return Workouts(Completados = completados, Pendientes = pendientes)
-        }
-    }
-}
-
-@IgnoreExtraProperties
-data class Ejercicio(
-    val Nombre: String = "",
-    val Peso: Int = 0,
-    val Progresivo: Progresivo = Progresivo(),
-    val Reps: Int = 0,
-    val Series: Int = 0,
-    val id: String = ""
 ) {
     companion object {
         @JvmStatic
-        fun fromSnapshot(snapshot: DataSnapshot): Ejercicio {
-            val nombre = snapshot.child("Nombre").getValue(String::class.java) ?: ""
-            val peso = snapshot.child("Peso").getValue(Int::class.java) ?: 0
-            val progresivo = snapshot.child("Progresivo").getValue(Progresivo::class.java) ?: Progresivo()
-            val reps = snapshot.child("Reps").getValue(Int::class.java) ?: 0
-            val series = snapshot.child("Series").getValue(Int::class.java) ?: 0
-            val id = snapshot.child("id").getValue(String::class.java) ?: ""
-            return Ejercicio(
-                Nombre = nombre,
-                Peso = peso,
-                Progresivo = progresivo,
-                Reps = reps,
-                Series = series,
-                id = id
+        fun fromSnapshot(snapshot: DataSnapshot): Restriccion {
+            val restriccionesMap = mutableMapOf<String, String>()
+            for (child in snapshot.children) {
+                val key = child.key ?: continue
+                val value = child.getValue(String::class.java) ?: continue
+                restriccionesMap[key] = value
+            }
+            return Restriccion(
+                restriccion = restriccionesMap
             )
         }
     }
 }
 
 @IgnoreExtraProperties
-data class Progresivo(
-    val Tipo: String = "",
-    val Variación: String = ""
+data class Workouts(
+    val Completados: List<Workout> = emptyList(),
+    val Pendientes: List<Workout> = emptyList(),
 ) {
     companion object {
         @JvmStatic
-        fun fromSnapshot(snapshot: DataSnapshot): Progresivo {
-            val tipo = snapshot.child("Tipo").getValue(String::class.java) ?: ""
-            val variación = snapshot.child("Variación").getValue(String::class.java) ?: ""
-            return Progresivo(
-                Tipo = tipo,
-                Variación = variación
+        fun fromSnapshot(snapshot: DataSnapshot): Workouts {
+            val completados = snapshot.child("Completados").children.mapNotNull { it.getValue(Workout::class.java) }
+            val pendientes = snapshot.child("Pendientes").children.mapNotNull { it.getValue(Workout::class.java) }
+            return Workouts(
+                Completados = completados,
+                Pendientes = pendientes
             )
         }
     }

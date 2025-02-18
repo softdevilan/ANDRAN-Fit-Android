@@ -1,15 +1,17 @@
 package com.example.andranfitmobile
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.andranfitmobile.databinding.ActivityMainBinding
-import com.example.andranfitmobile.ui.home.HomeFragment
-import com.example.andranfitmobile.ui.workouts.WorkoutsFragment
-import com.example.andranfitmobile.ui.trainers.TrainersFragment
+import com.example.andranfitmobile.ui.userselection.UserSelectionActivity
+
+private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +25,16 @@ class MainActivity : AppCompatActivity() {
 
         // Obtener el ID del usuario pasado desde UserSelectionActivity
         userId = intent.getStringExtra("USER_ID")
+        Log.d(TAG, "onCreate: UserID obtenido = ${userId}")
+
+        // Si no se ha recibido el ID del usuario, navegar a UserSelectionActivity
+        if (userId == null) {
+            Log.d(TAG, "onCreate: No se recibió UserID, navegando a UserSelectionActivity")
+            val intent = Intent(this, UserSelectionActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
 
         val navView: com.google.android.material.bottomnavigation.BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -38,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // Pasar el ID del usuario a los fragments
-        navController.addOnDestinationChangedListener { _, destination, arguments ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.navigation_home -> {
                     val bundle = Bundle().apply {
@@ -67,4 +79,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }
