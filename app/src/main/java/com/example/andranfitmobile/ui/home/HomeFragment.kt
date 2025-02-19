@@ -43,28 +43,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Configurar RecyclerView para mostrar los workouts
-        val recyclerView: RecyclerView = binding.workoutRecyclerView
-        workoutAdapter = WorkoutAdapter()
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = workoutAdapter
 
-        // Observar el usuario y los próximos workouts
-        homeViewModel.usuario.observe(viewLifecycleOwner) { usuario ->
-            val trato = usuario.Trato
-            val nombre = usuario.Nombre.Nombre
-            val bienvenida = when (trato) {
-                "M" -> "Bienvenido"
-                "F" -> "Bienvenida"
-                else -> "Hola"
-            }
-            Log.d(TAG, "Bindeando el texto de bienvenida con el nombre del usuario")
-            binding.bienvenidaTextView.text = "$bienvenida, $nombre"
-        }
-
-        homeViewModel.workouts.observe(viewLifecycleOwner) { workouts ->
-            workoutAdapter.submitList(workouts)
-        }
 
         return root
     }
@@ -73,6 +52,30 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sharedViewModel.userId.observe(viewLifecycleOwner) { userId ->
+
+            // Configurar RecyclerView para mostrar los workouts
+            val recyclerView: RecyclerView = binding.workoutRecyclerView
+            workoutAdapter = WorkoutAdapter(false, userId)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.adapter = workoutAdapter
+
+            // Observar el usuario y los próximos workouts
+            homeViewModel.usuario.observe(viewLifecycleOwner) { usuario ->
+                val trato = usuario.Trato
+                val nombre = usuario.Nombre.Nombre
+                val bienvenida = when (trato) {
+                    "M" -> "Bienvenido"
+                    "F" -> "Bienvenida"
+                    else -> "Hola"
+                }
+                Log.d(TAG, "Bindeando el texto de bienvenida con el nombre del usuario")
+                binding.bienvenidaTextView.text = "$bienvenida, $nombre"
+            }
+
+            homeViewModel.workouts.observe(viewLifecycleOwner) { workouts ->
+                workoutAdapter.submitList(workouts)
+            }
+
             Log.d(TAG, "ID recibido desde SharedViewModel: $userId")
 
             Log.d(TAG, "Llamando a cargarUsuario()")
