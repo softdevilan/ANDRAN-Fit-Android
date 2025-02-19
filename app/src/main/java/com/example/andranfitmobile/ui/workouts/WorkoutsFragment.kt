@@ -6,38 +6,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.andranfitmobile.SharedViewModel
 import com.example.andranfitmobile.databinding.FragmentWorkoutsBinding
 
 private const val TAG = "WorkoutsFragment"
 
 class WorkoutsFragment : Fragment() {
+
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
     private var _binding: FragmentWorkoutsBinding? = null
-    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var workoutsViewModel: WorkoutsViewModel
     private lateinit var workoutAdapter: WorkoutAdapter
+    private lateinit var pastWorkoutAdapter: WorkoutAdapter
+
 
     private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            userId = it.getString("USER_ID")
 
-            Log.d(TAG, "onCreate: Iniciando WorkoutsFragment")
-
-            // Verificar si el ID de usuario es null
-            if (userId == null) {
-                userId = "ktbbOu0vGkNwxlt3JevyuYpUElW2"
-                Log.d(TAG, "Null userId, inicializando a ktbbOu0vGkNwxlt3JevyuYpUElW2")
-            } else {
-                Log.d(TAG, "userId recibido: $userId")
-            }
-        }
+        Log.d(TAG, "onCreate: Iniciando WorkoutsFragment")
     }
 
     override fun onCreateView(
@@ -55,20 +50,42 @@ class WorkoutsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = workoutAdapter
 
-        // Observar los workouts
+        // Configurar RecyclerView para mostrar los workouts pasados
+        val pastWorkoutsRecyclerView: RecyclerView = binding.completedWorkoutsRecyclerView
+        pastWorkoutAdapter = WorkoutAdapter()
+        pastWorkoutsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        pastWorkoutsRecyclerView.adapter = pastWorkoutAdapter
+
+        // Observar los workouts futuros
         workoutsViewModel.workouts.observe(viewLifecycleOwner) { workouts ->
             workoutAdapter.submitList(workouts)
+
+            // Mostrar u ocultar el mensaje de "No tienes workouts pendientes"
+            binding.noUpcomingWorkoutsText.visibility = if (workouts.isEmpty()) View.VISIBLE else View.GONE
+            binding.workoutRecyclerView.visibility = if (workouts.isEmpty()) View.GONE else View.VISIBLE
         }
 
-        // Cargar los workouts del usuario
-        userId?.let {
-            workoutsViewModel.cargarWorkouts(it)
-            Log.d(TAG, "Cargando workouts para usuario con ID: $it")
-        } ?: run {
-            Log.e(TAG, "UserID es null, no se pueden cargar los workouts")
+        // Observar los workouts pasados
+        workoutsViewModel.pastWorkouts.observe(viewLifecycleOwner) { pastWorkouts ->
+            pastWorkoutAdapter.submitList(pastWorkouts)
+
+            // Mostrar u ocultar el mensaje de "No tienes workouts completados"
+            binding.noCompletedWorkoutsText.visibility = if (pastWorkouts.isEmpty()) View.VISIBLE else View.GONE
+            binding.completedWorkoutsRecyclerView.visibility = if (pastWorkouts.isEmpty()) View.GONE else View.VISIBLE
         }
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        sharedViewModel.userId.observe(viewLifecycleOwner) { userId ->
+            Log.d(TAG, "ID recibido desde SharedViewModel: $userId")
+            Log.d(TAG, "Llamando a cargarWorkouts()")
+
+            workoutsViewModel.cargarWorkouts(userId)
+        }
     }
 
     override fun onDestroyView() {
@@ -77,14 +94,4 @@ class WorkoutsFragment : Fragment() {
         Log.d(TAG, "onDestroyView: Destruyendo WorkoutsFragment")
     }
 
-    companion object {
-        fun newInstance(userId: String?): WorkoutsFragment {
-            val fragment = newInstance(userId)
-            val args = Bundle().apply {
-                putString("USER_ID", userId)
-            }
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

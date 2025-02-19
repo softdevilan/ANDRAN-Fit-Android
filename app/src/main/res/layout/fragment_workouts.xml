@@ -9,6 +9,7 @@
     tools:context=".ui.workouts.WorkoutsFragment">
 
     <TextView
+        android:id="@+id/proximosWorkoutsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tus próximos workouts"
@@ -17,8 +18,48 @@
         android:textColor="@color/yellowgreen"
         android:layout_marginBottom="@dimen/default_margin" />
 
+    <TextView
+        android:id="@+id/noUpcomingWorkoutsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No tienes workouts pendientes"
+        android:textSize="16sp"
+        android:textColor="@color/light_gray"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/default_margin" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/workoutRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/pasadosWorkoutsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tus workouts completados"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/yellowgreen"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin" />
+
+
+    <TextView
+        android:id="@+id/noCompletedWorkoutsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No tienes workouts completados"
+        android:textSize="16sp"
+        android:textColor="@color/light_gray"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/completedWorkoutsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

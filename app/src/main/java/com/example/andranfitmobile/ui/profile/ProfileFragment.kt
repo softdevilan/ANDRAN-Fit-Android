@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.andranfitmobile.R
+import com.example.andranfitmobile.SharedViewModel
 import com.example.andranfitmobile.data.User
 import com.example.andranfitmobile.databinding.FragmentProfileBinding
 import java.text.SimpleDateFormat
@@ -17,8 +19,9 @@ private const val TAG = "ProfileFragment"
 
 class ProfileFragment : Fragment() {
 
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
     private var _binding: FragmentProfileBinding? = null
-    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var profileViewModel: ProfileViewModel
@@ -28,18 +31,6 @@ class ProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         Log.d(TAG, "onCreate: Iniciando ProfileFragment")
-
-        arguments?.let {
-            userId = it.getString("USER_ID")
-
-            // Verificar si el ID de usuario es null
-            if (userId == null) {
-                userId = "ktbbOu0vGkNwxlt3JevyuYpUElW2"
-                Log.d(TAG, "Null userId, inicializando a ktbbOu0vGkNwxlt3JevyuYpUElW2")
-            } else {
-                Log.d(TAG, "userId recibido: $userId")
-            }
-        }
     }
 
     override fun onCreateView(
@@ -84,32 +75,24 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        // Cargar el usuario
-        userId?.let {
-            profileViewModel.cargarUsuario(it)
-            Log.d(TAG, "onCreateView: Cargando usuario con UserID: $it")
-        } ?: run {
-            Log.e(TAG, "UserID es null, no se puede cargar el usuario")
-        }
-
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        sharedViewModel.userId.observe(viewLifecycleOwner) { userId ->
+            Log.d(TAG, "ID recibido desde SharedViewModel: $userId")
+            Log.d(TAG, "Llamando a cargarUsuario()")
+
+            profileViewModel.cargarUsuario(userId)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
         Log.d(TAG, "onDestroyView: Destruyendo ProfileFragment")
-    }
-
-    companion object {
-        fun newInstance(userId: String?): ProfileFragment {
-            val fragment = ProfileFragment()
-            val args = Bundle().apply {
-                putString("USER_ID", userId)
-            }
-            fragment.arguments = args
-            return fragment
-        }
     }
 
     private fun formatDate(timestamp: Long): String {

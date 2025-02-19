@@ -52,14 +52,19 @@ class HomeViewModel : ViewModel() {
                     val allWorkouts = mutableListOf<Workout>()
                     allWorkouts.addAll(it.Workouts.Pendientes)
                     allWorkouts.sortByDescending { it.Fecha }
-                    val nextWorkout = mutableListOf<Workout>()
-                    nextWorkout.add(allWorkouts[0])
-                    _workouts.value = nextWorkout
+
+                    // Si hay workouts pendientes, mostrar el primero
+                    if (allWorkouts.isNotEmpty()) {
+                        val nextWorkout = mutableListOf<Workout>()
+                        nextWorkout.add(allWorkouts[0])
+                        _workouts.value = nextWorkout
+                    }
+
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Manejo de errores
+                Log.e(TAG, "onCancelled: Error al cargar workouts desde Firebase", databaseError.toException())
             }
         })
     }

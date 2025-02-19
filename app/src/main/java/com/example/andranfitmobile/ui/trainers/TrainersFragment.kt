@@ -5,16 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.andranfitmobile.SharedViewModel
 import com.example.andranfitmobile.databinding.FragmentTrainersBinding
 import com.example.andranfitmobile.ui.trainers.adapter.TrainerAdapter
 
 class TrainersFragment : Fragment() {
 
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
     private var _binding: FragmentTrainersBinding? = null
-    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var trainersViewModel: TrainersViewModel

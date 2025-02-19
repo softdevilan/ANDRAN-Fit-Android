@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.andranfitmobile.MainActivity
+import com.example.andranfitmobile.SharedViewModel
 import com.example.andranfitmobile.databinding.FragmentHomeBinding
 import com.example.andranfitmobile.ui.workouts.WorkoutAdapter
 
@@ -17,8 +19,9 @@ private const val TAG = "HomeFragment"
 
 class HomeFragment : Fragment() {
 
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
     private var _binding: FragmentHomeBinding? = null
-    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var homeViewModel: HomeViewModel
@@ -29,18 +32,6 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         Log.d(TAG, "onCreate: Iniciando HomeFragment")
-
-        arguments?.let {
-            userId = it.getString("USER_ID")
-
-            // Verificar si el ID de usuario es null
-            if (userId == null) {
-                userId = "ktbbOu0vGkNwxlt3JevyuYpUElW2"
-                Log.d(TAG, "Null userId, inicializando a ktbbOu0vGkNwxlt3JevyuYpUElW2")
-            } else {
-                Log.d(TAG, "userId recibido: $userId")
-            }
-        }
     }
 
     override fun onCreateView(
@@ -75,17 +66,25 @@ class HomeFragment : Fragment() {
             workoutAdapter.submitList(workouts)
         }
 
-        // Cargar el usuario y los próximos workouts
-        Log.d(TAG, "Llamando a cargarUsuario()")
-        userId?.let {
-            Log.d(TAG, "Cargando usuario con ID: $it")
-            homeViewModel.cargarUsuario(it)
-
-            Log.d(TAG, "Cargando próximos workouts del usuario con ID: $it")
-            homeViewModel.cargarWorkouts(it)
-        }
-
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        sharedViewModel.userId.observe(viewLifecycleOwner) { userId ->
+            Log.d(TAG, "ID recibido desde SharedViewModel: $userId")
+
+            Log.d(TAG, "Llamando a cargarUsuario()")
+            homeViewModel.cargarUsuario(userId)
+
+            homeViewModel.cargarWorkouts(userId)
+
+            // Si no hay workouts pendientes, mostrar noUpcomingWorkoutsText
+            homeViewModel.workouts.observe(viewLifecycleOwner) { workouts ->
+                binding.noUpcomingWorkoutsText.visibility = if (workouts.isEmpty()) View.VISIBLE else View.GONE
+            }
+        }
     }
 
     override fun onDestroyView() {

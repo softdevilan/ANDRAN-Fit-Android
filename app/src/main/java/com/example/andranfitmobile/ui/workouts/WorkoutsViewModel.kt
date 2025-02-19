@@ -18,7 +18,8 @@ class WorkoutsViewModel : ViewModel() {
     private val _workouts = MutableLiveData<List<Workout>>()
     private val _incomingWorkouts = MutableLiveData<List<Workout>>()
     private val _completedWorkouts = MutableLiveData<List<Workout>>()
-    val workouts: LiveData<List<Workout>> get() = _workouts
+    val workouts: LiveData<List<Workout>> get() = _incomingWorkouts
+    val pastWorkouts: LiveData<List<Workout>> get() = _completedWorkouts
 
     fun cargarWorkouts(userId: String) {
         val database = FirebaseDatabase.getInstance().getReference("Usuarios/Clientes").child(userId)

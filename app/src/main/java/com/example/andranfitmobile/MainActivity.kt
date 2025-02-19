@@ -1,6 +1,7 @@
 package com.example.andranfitmobile
 
 import android.content.Intent
+import androidx.activity.viewModels
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val sharedViewModel: SharedViewModel by viewModels()
     var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +38,11 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        sharedViewModel.setUserId(userId!!)
+
         val navView: com.google.android.material.bottomnavigation.BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_workouts, R.id.navigation_profile, R.id.navigation_trainers
@@ -50,6 +52,10 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // Pasar el ID del usuario a los fragments
+        // !! AYUDA !! El error que tengo es que a la hora de recibir el ID del usuario desde los Fragments, no lo recibe
+        // El ID lo recibe desde los fragments usando:
+        // arguments?.let { userId = it.getString("USER_ID") }
+        // userID es null después de esto, así que no lo está recibiendo, pero tiene valor en el momento de pasarlo desde la MainActivity
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.navigation_home -> {
