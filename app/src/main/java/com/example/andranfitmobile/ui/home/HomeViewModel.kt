@@ -51,15 +51,15 @@ class HomeViewModel : ViewModel() {
                 usuario?.let {
                     val allWorkouts = mutableListOf<Workout>()
                     allWorkouts.addAll(it.Workouts.Pendientes)
-                    allWorkouts.sortByDescending { it.Fecha }
+                    allWorkouts.sortByDescending { it.fecha }
+                    val nextWorkout = mutableListOf<Workout>()
 
                     // Si hay workouts pendientes, mostrar el primero
                     if (allWorkouts.isNotEmpty()) {
-                        val nextWorkout = mutableListOf<Workout>()
                         nextWorkout.add(allWorkouts[0])
-                        _workouts.value = nextWorkout
                     }
 
+                    _workouts.value = nextWorkout
                 }
             }
 

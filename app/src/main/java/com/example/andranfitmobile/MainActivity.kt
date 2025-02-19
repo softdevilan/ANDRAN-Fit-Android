@@ -52,10 +52,6 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // Pasar el ID del usuario a los fragments
-        // !! AYUDA !! El error que tengo es que a la hora de recibir el ID del usuario desde los Fragments, no lo recibe
-        // El ID lo recibe desde los fragments usando:
-        // arguments?.let { userId = it.getString("USER_ID") }
-        // userID es null después de esto, así que no lo está recibiendo, pero tiene valor en el momento de pasarlo desde la MainActivity
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.navigation_home -> {

@@ -37,9 +37,9 @@ class WorkoutsViewModel : ViewModel() {
                     allWorkouts.addAll(incomingWorkouts)
                     allWorkouts.addAll(completedWorkouts)
 
-                    allWorkouts.sortBy { it.Fecha }
-                    incomingWorkouts.sortBy { it.Fecha }
-                    completedWorkouts.sortBy { it.Fecha }
+                    allWorkouts.sortBy { it.fecha }
+                    incomingWorkouts.sortBy { it.fecha }
+                    completedWorkouts.sortBy { it.fecha }
 
                     _incomingWorkouts.value = incomingWorkouts
                     _completedWorkouts.value = completedWorkouts

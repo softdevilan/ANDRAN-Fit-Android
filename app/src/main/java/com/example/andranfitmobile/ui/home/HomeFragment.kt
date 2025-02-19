@@ -39,11 +39,9 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-
 
         return root
     }
@@ -52,12 +50,19 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sharedViewModel.userId.observe(viewLifecycleOwner) { userId ->
+            Log.d(TAG, "ID recibido desde SharedViewModel: $userId")
 
             // Configurar RecyclerView para mostrar los workouts
             val recyclerView: RecyclerView = binding.workoutRecyclerView
             workoutAdapter = WorkoutAdapter(false, userId)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.adapter = workoutAdapter
+
+            // Configurar RecyclerView para mostrar los workouts pasados
+            val workoutsRecyclerView: RecyclerView = binding.workoutRecyclerView
+            workoutAdapter = WorkoutAdapter(true, userId)
+            workoutsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            workoutsRecyclerView.adapter = workoutAdapter
 
             // Observar el usuario y los próximos workouts
             homeViewModel.usuario.observe(viewLifecycleOwner) { usuario ->
@@ -72,21 +77,20 @@ class HomeFragment : Fragment() {
                 binding.bienvenidaTextView.text = "$bienvenida, $nombre"
             }
 
+            Log.d(TAG, "Antes de observar homeViewModel.workouts")
             homeViewModel.workouts.observe(viewLifecycleOwner) { workouts ->
+                Log.d(TAG, "workouts observados: ${workouts.size}")
                 workoutAdapter.submitList(workouts)
-            }
 
-            Log.d(TAG, "ID recibido desde SharedViewModel: $userId")
+                binding.noUpcomingWorkoutsText.visibility = if (workouts.isEmpty()) View.VISIBLE else View.GONE
+                Log.d(TAG, "Mostrando noUpcomingWorkoutsText")
+            }
 
             Log.d(TAG, "Llamando a cargarUsuario()")
             homeViewModel.cargarUsuario(userId)
 
+            Log.d(TAG, "Llamando a cargarWorkouts()")
             homeViewModel.cargarWorkouts(userId)
-
-            // Si no hay workouts pendientes, mostrar noUpcomingWorkoutsText
-            homeViewModel.workouts.observe(viewLifecycleOwner) { workouts ->
-                binding.noUpcomingWorkoutsText.visibility = if (workouts.isEmpty()) View.VISIBLE else View.GONE
-            }
         }
     }
 

@@ -54,6 +54,7 @@ class WorkoutsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sharedViewModel.userId.observe(viewLifecycleOwner) { userId ->
+            Log.d(TAG, "ID recibido desde SharedViewModel: $userId")
 
             // Configurar RecyclerView para mostrar los workouts
             val recyclerView: RecyclerView = binding.workoutRecyclerView
@@ -85,9 +86,7 @@ class WorkoutsFragment : Fragment() {
                 binding.completedWorkoutsRecyclerView.visibility = if (pastWorkouts.isEmpty()) View.GONE else View.VISIBLE
             }
 
-            Log.d(TAG, "ID recibido desde SharedViewModel: $userId")
             Log.d(TAG, "Llamando a cargarWorkouts()")
-
             workoutsViewModel.cargarWorkouts(userId)
         }
     }

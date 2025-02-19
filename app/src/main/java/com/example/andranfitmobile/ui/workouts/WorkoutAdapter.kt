@@ -1,5 +1,6 @@
 package com.example.andranfitmobile.ui.workouts
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,11 +41,11 @@ class WorkoutAdapter(private val isCompletedList: Boolean, private val clienteId
         private val completarButton: Button = itemView.findViewById(R.id.completarButton)
 
         fun bind(workout: Workout, isCompleted: Boolean) {
-            val fechaFormateada = formatDate(workout.Fecha)
+            val fechaFormateada = formatDate(workout.fecha)
             fechaTextView.text = fechaFormateada
 
-            val ejercicios = workout.Ejercicios.joinToString(", ") { ejercicio: Exercise ->
-                "${ejercicio.Nombre} (${ejercicio.Series}x${ejercicio.Reps})"
+            val ejercicios = workout.ejercicios.joinToString(", ") { ejercicio: Exercise ->
+                "${ejercicio.nombre} (${ejercicio.series}x${ejercicio.reps})"
             }
             ejerciciosTextView.text = ejercicios
 
@@ -63,6 +64,8 @@ class WorkoutAdapter(private val isCompletedList: Boolean, private val clienteId
 
     private fun marcarComoCompletado(workout: Workout) {
         val database = FirebaseDatabase.getInstance().reference
+
+        Log.d("marcarComoCompletado", "Datos del workout: ${workout}")
         val completadosRef =
             workout.id?.let {
                 database.child("Usuarios").child("Clientes").child(clienteId).child("Workouts").child("Completados").child(
